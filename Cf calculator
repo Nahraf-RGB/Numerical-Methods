@@ -1,0 +1,46 @@
+import math
+import matplotlib.pyplot as plt
+npr = 60 # chamber pressure / ambient pressure
+mdot = 2.3965957 #kg/s
+mbb = 0.02*(mdot) # bleed mass flow rate
+vbb = 673.91296# bleed velocity ( area weighted avg of vel mag)
+pbb = 143947.45# bleed hole pressure (area weighted avg of pressure at bleed)
+Abb = 0.000014985 # bleed area
+v_thr = 222.5 #m/s throat velocity
+cos_theta = 0.5735764 # constant value for theta 55
+p_thr =4397505 #pa throat pressure
+p_amb = 101325#pa ambient pressure
+p_base = 181129.73
+ #pa base pressure
+A_thr = 0.0001728 #m2 throat area
+A_base = 0.000376 #m2 base area
+gam = 1.4 # gamma value
+
+a = (gam-1)
+b = (gam+1)
+c = b/a
+d = -(a)/gam
+
+
+con_thr = 749.21 # N contour thrust
+p_chamb = npr*101325 #pa chamber pressure
+
+#calculating total thrust
+F_total = (mdot*v_thr*cos_theta) + (p_thr - p_amb)*A_thr*cos_theta + con_thr + (p_base - p_amb)*A_base + (mbb * vbb*0.70721) + (pbb - p_amb)*Abb
+print(F_total)
+
+#calculating actual thrust coefficient
+cf_actual = F_total / (A_thr * p_chamb)
+print(cf_actual)
+
+#calculating ideal thrust coefficient
+cf_ideal = gam * math.sqrt((2/a)*(2/b)**c * (1-npr**d))
+print(cf_ideal)
+
+#calculating nozzle efficiency
+eff = cf_actual/cf_ideal
+print(eff)
+
+
+
+

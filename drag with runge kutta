@@ -1,0 +1,104 @@
+import math 
+import matplotlib.pyplot as plt
+
+#initial conditions
+g = 9.806
+beta = 0.01 
+xo = 0.0001
+yo = 0.0001
+v = 100
+theta = 65
+vxo = v*math.cos(math.radians(theta))
+vyo = v*math.sin(math.radians(theta))
+to = 0
+dt = 0.01 #time step
+
+#variable lists
+x_pos = []
+y_pos = []
+x_vel = []
+y_vel = []
+vel = []
+time = []
+
+#iteration counter
+iter = 0
+
+while yo > 0:
+    #calculating x position using euler method
+    xn = xo + (1/beta)*math.log(1+(beta*vxo*to))
+    print("x: " +str(xn))
+    x_pos.append(xn)
+    xo = xn
+
+    #calculating y position
+    hy = 0.01
+    ky1 = hy*(-g*(1 + (beta/g)*vyo**2))
+    ky2 = hy*(-g*(1 + (beta/g)*vyo**2))
+    ky3 = hy*(-g*(1 + (beta/g)*vyo**2))
+    ky4 = hy*(-g*(1 + (beta/g)*vyo**2))
+    ky = 0.1667*(ky1 + 2*ky2 + 2*ky3 + ky4)
+    yn = yo + ky
+    print("y: " + str(yn))
+    y_pos.append(yn)
+    if yn < 0:
+        break
+    else:
+        yo = yn
+    
+
+    #calc x velocity
+    hvx = 0.01
+    kvx1 = hvx*(-beta*(vxo**2))
+    kvx2 = hvx*(-beta*(vxo**2 + 0.5*hvx))
+    kvx3 = hvx*(-beta*(vxo**2 + 0.5*hvx))
+    kvx4 = hvx*(-beta*(vxo**2 + hvx))
+    kvx = 0.1667*(kvx1 + 2*kvx2 + 2*kvx3 + kvx4)
+    vxn = vxo + kvx
+    print("x vel: " + str(vxn))
+    x_vel.append(vxn)
+    
+
+    #calc y velocity
+    hvy = 0.01
+    kvy1 = hvy*(-beta*(vyo**2))
+    kvy2 = hvy*(-beta*(vyo**2 + 0.5*hvy))
+    kvy3 = hvy*(-beta*(vyo**2 + 0.5*hvy))
+    kvy4 = hvy*(-beta*(vyo**2 + hvy))
+    kvy = 0.1667*(kvy1 + 2*kvy2 + 2*kvy3 + kvy4)
+    vyn = vyo + kvy
+    print("y-velocity: " +str(vyn))
+    y_vel.append(vyn)
+
+    #overall velocity
+    vn = math.sqrt(vxo**2 + vyo**2)
+    print("velocity: " + str(vn))
+    vel.append(vn)
+    v = vn
+
+    #time iteration
+    tnew = to + dt
+    print("time: " +str(tnew))
+    time.append(tnew)
+    to=tnew
+    
+    #counter
+    iter = iter + 1
+    print("iteration no: " +str(iter))
+
+print(x_pos[-1])
+print(y_pos[-1])
+print(x_vel[-1])
+print(y_vel[-1])
+print(time[-1])
+
+
+plt.plot(x_pos, y_pos)
+plt.xlabel("x-coordinate")
+plt.ylabel('y-coordinate')
+plt.grid()
+plt.show()
+
+
+
+    
